@@ -1,0 +1,37 @@
+********************************DESIGN PATTERNS****************************************
+well established solutions for day to day problems.
+
+1. creational - provides the object creation mechanism that increase flexibility and reuse the code.
+2. Structural - Compositing the objects each other. (Adding one object into another object) while keeping these structures flexibile and  efficient
+3. Behavioural - How each object communicate each other.
+
+Creational - Singleton | Factory | Abstract Factory | Builder | Prototype
+----------------------------------------------------------------------------------------------------------------
+Factory -> 
+           This factory pattern provides the mechanism to creating the objects to increase the flexisibility with loose coupling.
+Creating the objects internally without exposing the object creation to the clients. 
+Example: Creating the paymentfactory interface -depends on the card type class implements in ecommerce application. 
+In java util - calendar.getInstance()
+-----------------------------------------------------------------------------------------------------------------
+Builder Pattern:
+              This pattern used to build the complex objects step by step and ensure code looks more maintainable and scablable.
+Why builder pattern: To avoid n number of confusing constructors. for scalable and maintainable.
+Example: In swiggy, how complex meal is build using the step by step.
+Meal - Soup + Starter+main course+dessert+drinks - each will have seperate classes and in the meal class will be compositie. but the meal builder class will set the values for each object. Meal meal = new MealBuilder().setMainCourse(mainCourse).setSoup(soup) like this.
+
+or we can createt the centralized interface as Builder which will have the list of methods then mealbuilder implements that builder methods. so we can do the more customizable familymeal + dietmeal + combomeal kind off.
+
+------------------------------------------------------------------------------------------------------------------
+
+Singleton - Singleton restricts the multiple object creations. only one resource should be available across the application.
+spring boot- configuration manager+logger+DB connection pool.
+private constructire-> no one will able to create the object out side of the class.
+
+
+Adapter Design pattern: converting object one form to  different form
+--Dependecy Inversion - dont depended it on directly but depends with interface.
+-->gpay -> connet with different banks-so instead of changing the code base for it will have adapter class which implements the main methodsand 
+inernally calling the banking methods.
+	
+
+Structual - 

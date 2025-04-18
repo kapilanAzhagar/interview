@@ -1,0 +1,29 @@
+****************JAVA Lambda's and Stream API*********************************
+@FunctionalInterface - Will have only one method. Every time you pass the value and get the same value at the every time.
+
+Lambda's will be used to write the cleaner code and avoid the boiler plate code and reduce the number of classes.
+JDK provides lots of ready-made Functional Interfaces. Ex: Java.util.Function -> IntBinaryOperator
+
+**********************Stream API:*****************************
+Stream() -> Interface-> will have list of useful methods.
+Streams are immutable so once its created and used cant reuse it again, its like flow of water.
+Streams will have intermediate and ternmical functions. intermediate functions are operational one and terminal functions are closing one.
+map -> used to apply the calculation operation.
+filter -> used to return true or false
+forEach-> terminal one, either to print.
+
+Streams are useful for processing for objects and not for storing objects.
+
+java collections - 50 gfg + journal dev+java revisted
+50 basic coding questions on arrays
+50 basic coding questions on string
+
+
+
+hashap -> hashing with key value pair.
+its stored with array of linked list(buckets). after java8 it supports with red black tree to handle collisions.
+put(key, value) -> perform the key hashing -key.hashing().Then find the index= hashcode*(n-1)
+get(key)-> get the hashcode based on the key then find the bucket with index for accessing the key.
+Its not thread safe.
+
+ConcurrentHashMap is a thread-safe version of HashMap that allows high-performance concurrent access using fine-grained locking (Java 7) and lock-free CAS(compare and swap) operations (Java 8). Reads are completely lock-free, and writes use minimal locking, making it ideal for multi-threaded applications. It does not allow null keys or values, and methods like computeIfAbsent() ensure atomic updates. Compared to Collections.synchronizedMap(), it provides much better scalability due to lock striping."

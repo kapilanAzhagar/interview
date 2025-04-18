@@ -1,0 +1,72 @@
+------------------------JVM----------------------------------------
+JVM - stack memory (each method will have own stack, local variables) + heap memory (objects, values of the stack reference)
+
+Garbage collector: In heap momory When the object no longer having any reference then its eligible for garbage collection.
+How : *******Marking & Sweeping process.**********
+Marking - The garbage collector identify the live objects with in the heap memory. it will check any direct or indirect connection with  stack. it involves chceking the each reference in stack whether they do have the reference or not. 
+Once its indntified, using the maping the address references or counter the marking will happen. 
+
+Sweeping :- its the process of removing the unused object references. 3 ways 
+		 Normal sweeping - when the memory blocks got empty inside then the new data will be saved at the end of the memory.
+		 Sweeping with Compacting - After removing the un-used block, additionally it combacts the memory blocks so it will have additional memory at the end.
+		 Sweeping with Copying - Once the unused object reference removed then we will copy the entire block of data into the additional new memory space.
+
+Types of heap memory: 
+	Heap Memory - Young Generation + old Generation + Metaspace
+				Young Generation (new object created) - Eden space(live objets moved as part of GC) + Surviour space (Afer GC, stable and live objects)
+				+ Old Generation - After surviour space is filled then it moved under old generation after threshold time its eligible for GC.
+				Metaspace - class metadata (old permgen space before java-8) - methods, class structures, constants , annotations. 
+						allocated when the class is loaded and deallocated when the class is un-loaded.
+
+Garbage collection algorithm: Before doing anything pausing is required while sweeping through gc.
+	Single garbage collector - mark and copy on young generation + mark sweep combact on old generation + single threaded + For small app
+	Parallel garbage collector - Mark & copy for young gen+mark & sweep combact for old gen+multi threads+ good for little large app
+	concurrent garbage collector - mark and copy for yung gen+mark and sweep combact for old gen+concurrent threads but still with world stop problem.
+	Garbage First - first garbage collector - advanced from java 7. Divides the heap into regions and collecting garbage in most garbage first.combines parallel, concurrent mechanisms.suitable for large applications.
+	Z GC - Latest trend.Aims for pausing less than 10ms. used by reference coloring+concurrent.suitable for 64 bit systems.
+	
+Metrics of GC - 
+	Allocation rate
+	Heap population
+	Mutation rate
+	Object life cycle
+	Marking time
+	Compaction time
+	GC cycle time
+
+JVM Tuning - we should consider to do this activity as a last step as developer. more than this code optimizations required.
+	- select the JVM parameters + change the values + adjust the values
+
+JVM monitoring tool - command line interface (jstat), visual VM(visial representation), profiling.	
+	jstat - jstat -gcutil PID ->returns the table format of eden space, survior space, and GC related fields.
+	visual VM - connect with the application to identify the cpu usage, heap memory, no of threads and all.
+	
+
+*************************************Metaspace******************************8
+Metaspace will extend the size by jvm when the threshold is reached.
+Good to set the max threshold value.
+When metaspace will be cleaered, when the max threshold reached or out of memeory happens.
+
+****************Garbage Tuning************************************************
+1. Need to select the garbage collection type for an each application. like serial, parallel, concurrent, garbage first, z-garbage collection.
+2. based on the garbage collection type the heap space will be cleared. (jiz-saw way recommended).
+
+**************************Find Memory Leak*******************************************
+Number of objects are in memory which is not cleared at all.
+
+Finding + Fixing is the perfect solution.
+
+++UseHeapMemoryonDump ++UseHeapDumpPath="users/kapilan/" -> This will create the heapdump at the time of out of memory error.
+Which needs to be loaded on visualVM application. -> to see number of objectes, classes loaded, threads, references and all.
+
+********************Fixing mempry leak*********************
+1. Dont use String concat and use the string builder.
+2. set the object reference as null if not used
+3. Close the Stream and resources as expected.
+4. Do not use static collections.
+5. Always implement hashcode and equals all together when we use the custom objects of hashset.
+
+
+
+
+	

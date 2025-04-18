@@ -1,0 +1,207 @@
+----------------------------MICROSERVICES DESIGN PATTERN-------------------
+
+**********************Decomposition pattern****************************
+
+	Like OOPs concepts, how we are breaking down bigger problem into smaller problem statements with reusable code.
+	Decomposing a system like from a larger project into smaller, buildable, deployable and scalable independently.
+	
+	Services types: 
+		Domain based services - 
+			In ecommerce, we might have different services for payment service, offer service, discount service
+		Business based process services -
+			In ecommerce application, the checkout process involves multiple steps include cart domain, payment domain, offer domain. it doesnt own the data but it involves different domains and avoid duplicate of code.
+			generally the business process service will have the n number of domain services internally.
+		Atomic transaction based services - 
+			Imagine you're at a grocery store self-checkout. You scan your items, and when you're done, you need to pay. The entire process of scanning and paying needs to be completed successfully for the transaction to be valid. If any part of the process fails (like your card not going through), the entire transaction is canceled, and you need to start over.finanancial services cant anticipate eventual consistency. Mostly try to avoid this patterns.
+		
+	Strangular design pattern - 
+		Imagine you have an old, large tree (representing your monolithic system) that you want to replace with new, healthier trees (representing microservices). Instead of cutting down the old tree all at once, you plant new trees around it. As these new trees grow and take over, you gradually trim away the old tree's branches until it's completely replaced by the new tree.
+		
+		Breaking monolithic applications instead of creating new systems.
+		
+		In the context of software, you start with your monolithic application and gradually replace its components with microservices. You move functionality piece by piece to the new microservices, redirecting the clients to use these new services. Over time, the old monolithic system is "strangled" and can be completely removed once all its functionality has been migrated.
+		This approach allows for a smooth transition without disrupting the entire system at once.	
+	
+	Sidecar pattern - 
+		Imagine you have a busy restaurant kitchen (representing your microservices). Each chef (service) is focused on cooking their specific dishes. Now, to make things more efficient, you bring in a helper (sidecar) for each chef. These helpers handle repetitive tasks like chopping vegetables, washing dishes, or fetching ingredients. This way, the chefs can focus on cooking without getting bogged down by these repetitive tasks.
+
+		In the context of microservices, the sidecar pattern allows you to offload repetitive tasks like logging, monitoring, or security to a separate module (sidecar) that runs alongside each microservice. This helps reduce duplicate code and ensures that these tasks are handled consistently across all services without modifying the main application code.
+	
+***********************************Integration Pattern*********************************************************************************
+
+Gateway Pattern:
+	Gateway pattern is designed to provide a buffer between the underlying services to a client needs.
+	handles auth+authrization, modifying the payload specific to clients, rate limiting, IP whitelisting, acting as proxy or facade.
+	
+
+Process Aggregate Pattern:
+	Identify the multiple business process services and create the model to communicate and control the multiple business processed services.
+	
+	For example: wedding planner controls the photography, catering, decoration.
+	
+	In the context of microservice, this pattern need to have single API call with huge set of payload which are needed to commmunicate with internal business based process services. 
+	Defintely this will cause the network slowness issues in future.
+
+
+Edge Pattern:
+	Multtiple help desk for each client specific in hotel
+	
+	In the context of microservice, instead of hanlding a single gateway all the requests, the edge pattern simplifies and provides client specific requests modification which allows more flexibility interms of mobile or web.
+	Edge pattern is more preferrable than the gateway pattern.
+	
+	Imagine your e-commerce site serves both web users and mobile app users. Instead of using a single gateway for all requests, you create specialized edge services:
+
+	Web Edge Service:
+		Handles requests from web browsers, providing detailed product pages, high-resolution images, and extensive search capabilities.
+	Mobile Edge Service: 
+		Handles requests from mobile apps, offering optimized data payloads, lower-resolution images, and simplified navigation to ensure fast performance on mobile devices.
+
+	By using the Edge pattern, you can tailor the services to meet the specific needs of each client type, improving performance and scalability. This way, web users get a rich experience, while mobile users enjoy a fast and responsive app.
+	
+	
+
+*****************Data Patterns****************************************************
+
+Single service database:--- Single Database per single Service:
+	Imagine your e-commerce platform has different services for managing products, orders, and user accounts. Each service has its own dedicated database:
+
+	Product Service: Manages product details like descriptions, prices, and inventory. It has its own database to store all product-related data.
+	Order Service: Handles customer orders, payments, and shipping details. It uses a separate database to manage order information.
+	User Service: Manages user accounts, profiles, and authentication. It has its own database for storing user data.
+
+    By using the single service database pattern, each service can scale independently. For example, if there's a high demand for product searches, you can scale the Product Service and its database without affecting the Order or User services. This isolation ensures better performance and easier management of each service.
+	
+
+Shared Database service:
+	single microservice application, will connect with multiple schemas, though the schema's are part of single database.
+	
+	Imagine your e-commerce platform has different services for managing products, orders, and user accounts. Instead of each service having its own database, they all share a single database:
+
+	Products: Stores all product details like descriptions, prices, and inventory.
+	Orders: Manages customer orders, payments, and shipping details.
+	Users: Handles user accounts, profiles, and authentication.
+
+	Even though these services share a single database, you can logically separate the data using schemas or key spaces. For example, the product data might be in one schema, order data in another, and user data in a third. Each service accesses its own schema with unique credentials to maintain logical isolation.
+
+	This approach is useful for startups or when you need to reduce overhead, as it allows you to manage and scale the database more efficiently while keeping the data logically separated for future scalability.
+
+
+
+CQRS - Command Query Responsibility Segreeation: 
+	Imagine your e-commerce platform has two main operations: placing orders and viewing order history.
+
+	Command Side (Write): When a customer places an order, the system processes the order, updates inventory, and records the 		    transaction. This involves complex business logic and validations.
+	
+	Query Side (Read): When a customer wants to view their order history, the system retrieves and displays the order details. This 	operation is optimized for fast reads and may involve aggregating data from multiple sources.
+
+	In the CQRS pattern, these two operations are handled separately. The command side focuses on handling the write operations with all necessary business logic, while the query side is optimized for read operations, ensuring fast and efficient data retrieval. This separation allows each side to be optimized independently, improving overall system performance and scalability.
+	
+
+
+Asynchronous Eventing: Distributed systems-(Saga Pattern manages the transaction with the help of local transactions and compensating the actions incase of failure.= choreography pattern + Orchestration pattern)
+
+	Imagine a customer places an order on your e-commerce site. Instead of processing everything in a single, blocking call, you use asynchronous eventing to handle different parts of the process:
+
+	Order Placement: The customer places an order, and the system immediately acknowledges it with a confirmation message.
+	Inventory Update: An event is triggered to update the inventory. This happens in the background without making the customer wait.
+	Payment Processing: Another event handles the payment processing asynchronously. If there's an issue, the system can notify the customer later.
+	Shipping: Once the payment is confirmed, an event triggers the shipping process, and the customer receives a notification when the order is shipped.
+
+	By using asynchronous eventing, you ensure that each part of the order process happens independently and efficiently, providing a smooth experience for the customer without long wait times.
+	
+
+*********************OPERATIONAL PATTERNS************************************************************
+
+Log Aggregation: 
+	Centeralized logging - ELk- each microservice will have own unique log location, so get everything streaming under one location.	Elastic search+logstash+kibana
+	
+	By using log aggregation, you collect all these logs into a single, centralized system. This allows you to:
+
+	Quickly Diagnose Issues: If a customer reports a problem with their order, you can trace the issue across different services by correlating logs.
+	Maintain Consistency: Ensure that log formats and structures are consistent across all services, making it easier to parse and analyze the data.
+	Improve Monitoring: Aggregate logs help you monitor the overall health of your platform and identify patterns or anomalies.
+
+
+Metric Aggregation Pattern:
+	Visualizing the health of the microservice application with the error rates,through put and setting the alarm can be really helpful for on-call support with the help of detailed dashboard. (APM tools integration->New Relic)
+	
+	Imagine your e-commerce platform has multiple services: user authentication, product catalog, order processing, and payment gateway. Each service generates various metrics, such as response times, error rates, and transaction counts.
+
+	Metrics Aggregation Example:
+
+	User Authentication Service: Tracks login success rates, average login time, and failed login attempts.
+	Product Catalog Service: Monitors product search response times, number of searches, and errors in fetching product details.
+	Order Processing Service: Measures order placement times, order success rates, and processing errors.
+	Payment Gateway Service: Records payment success rates, transaction times, and payment failures.
+
+	By aggregating these metrics into a centralized dashboard, you can:
+
+	Monitor System Health: Quickly identify issues in any service by viewing high-level metrics.
+	Diagnose Problems: Drill down into detailed metrics for each service to pinpoint the root cause of issues.
+	Improve Performance: Use aggregated data to optimize service performance and enhance the user experience.
+
+	This approach helps you maintain a comprehensive view of your platform's operations, ensuring smooth and efficient performance.
+	
+
+Tracing Pattern: AWS XRAY pattern. Connecting with all the microservices logs through structured trace-ID.
+	
+	Imagine a customer places an order on your e-commerce site. The process involves multiple microservices: user authentication, product catalog, order processing, payment gateway, and shipping.
+
+	Example:
+
+	User Authentication Service: The customer logs in, and a trace ID is generated and attached to this request.
+	Product Catalog Service: The customer browses products, and the trace ID follows the request to fetch product details.
+	Order Processing Service: The customer places an order, and the trace ID is used to track the order processing steps.
+	Payment Gateway Service: The payment is processed, and the trace ID helps track the payment transaction.
+	Shipping Service: The order is shipped, and the trace ID tracks the shipping status.
+
+	By using tracing patterns, you can follow the entire journey of the order from login to shipping. This helps you diagnose issues, understand the flow of requests, and ensure that no part of the process is lost or untracked.
+
+
+Externalize Configuration: Spring cloud config | AWS S3 bucket
+	 When you deploy your application, it reads the appropriate configuration based on the environment.
+
+	Benefits:
+
+	Easier Management: You can update configurations without changing the code.
+	Faster Troubleshooting: Clear separation of configuration helps quickly identify and fix issues.
+	Consistency: Consistent naming and structure across environments reduce errors.
+
+	This approach ensures that your application is flexible and easier to manage across different environments.
+	
+
+Service Discovery: What service do i call? -> Centerl location of all services. Netflix Ureka | AWS Route53 config |
+	Saves lot of time during run-time.
+	
+	URI from discovery engine not config.
+	
+	Imagine your e-commerce platform has multiple microservices: user authentication, product catalog, order processing, payment gateway, and shipping.
+
+	Service Discovery in Action:
+
+	User Authentication Service: When a new user authentication service comes online, it registers itself with the service discovery tool, advertising its location and capabilities.
+	Product Catalog Service: Similarly, the product catalog service registers itself, making it discoverable to other services.
+	Order Processing Service: When the order processing service needs to interact with the product catalog or payment gateway, it queries the service discovery tool to find the current locations of these services.
+	Payment Gateway Service: The payment gateway service also registers itself, ensuring that the order processing service can find and communicate with it.
+	Shipping Service: Finally, the shipping service registers itself, allowing the order processing service to locate it for shipping updates.
+
+	By using service discovery, each service can dynamically find and communicate with other services without hardcoding their locations. This makes the system more flexible and easier to scale.
+		
+	
+Continuoes Delivery: CI/CD pipeline integration with microservice.
+
+	Imagine your e-commerce platform frequently updates its features, like adding new payment methods or improving the product search functionality.
+
+	Continuous Delivery Process:
+
+	Code Changes: Developers make changes to the codebase to add a new payment method.
+	Automated Tests: The new code is automatically tested with unit tests to ensure it works correctly.
+	Integration Tests: The code is then deployed to a non-production environment where automated integration tests run to check if the new payment method works with other services.
+	Security Tests: Automated security tests, including penetration testing, are performed to ensure the new feature doesn't introduce vulnerabilities.
+	User Acceptance Tests (UAT): The feature is tested in a staging environment to ensure it meets user requirements.
+	Production Deployment: Once all tests pass, the code is automatically deployed to the production environment, making the new payment method available to customers.
+
+	By using continuous delivery, your e-commerce platform can quickly and reliably release new features, ensuring a seamless experience for customers.
+
+Documentation:
+	document repositiry | swagger | openAPI

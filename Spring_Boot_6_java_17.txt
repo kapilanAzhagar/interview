@@ -1,0 +1,93 @@
+----------------------...-----------------------------
+-------------------------SPRING BOOT-------------------
+
+SPRING -> STARTED IN 2003-> helps to developer over convention over configuration.
+	----> Inversion of control = Giving the control of object creation to someone (difficult to manage the object life cycle)
+	which is implemeted by Dependecy Injection.Its a design pattern.
+
+Dependency Injection: constructor DI + setter DI+(Field dependency injection)
+IOC container: spring itself owning this container for object creation inside the JVM. SpringApplication.run()--> actually loads the container when the application is initialised.
+Incase if we create the object seperately, then we need to take care of the life cycle of the object which is created inside the JVM and not inside the container.
+
+But incase if we want to tell spring like, u plz create the object when the application starting itself, then use @Component annotation in the class where you want to create the object for you inside the container.
+
+Now if want to access the specific bean, without creating the object using new keyword then use the 
+ApplicationContext context = SpringApplication.run();--assigning the container
+ExpectedClass expectedClass = context.getBean(ExpectedClass.class);--load the specific bean.
+expectedClass.build();
+
+*** Spring by default will not create the objects for all the classes.
+@Autowired
+Field Injection: @Autowired - UserService has a dependency on UserRepository, and @Autowired instructs Spring Boot to inject an instance of UserRepository into UserService during application startup.
+Or tis could be done through constructor based injection in the destination place and setter based injection also.
+In the setter based injection, its good to use the @Autowired annotation as well.
+@Autowired will be working by Type.
+The type of @Autowired : no, byName, byType, autodetect
+
+@Primary Annotation helping to give the priority to one object, if multiple classes are implemeted the interfaces. Where this @Primary annotation is available, that class object will get created.
+Incase if we dont like to use the @Primary annotation then we can use the @Qualifier annotation with the instance of the class would get preference.
+
+
+@Qualifier annotation used when a specific bean to inject.
+
+----Spring Framework----
+Need to use the application context through xml based approach for loading the beans into the IOC container.
+constructor/setter based injection will be handled through spring.xml file.
+In the spring.xml file need to configure the property tag if its setter based dependency injection and 
+constructor-arg tag for constructor based injection.
+
+			
+
+-------------------Spring MVC----------------
+@Controller - is responsible for getting the resources from client request. The @Controller annotation is used to build server-rendered web applications that return views, such as HTML pages.
+@RequestMapping - is responsible for redirecting the requestes to the specific resources.
+
+@RestController - will accpept the http web request and then send the response as data usually in JSON or XML format. Its the combination of @Controller and @ResponseBody annotation. It returns the data rather than view page.
+
+FrontController - Sping Framework having the front controller which loads all the internal request mapping methods and redirect the specific controller and to the resource. its created default in spring web.
+
+Controller | Service | Model ->responsible for web applications.
+Controller is reponsible for accepting the client requests and responses to the client.
+
+@Data - annotation is reposible for creating the getter and setter methods in the domain which is part of lombok dependency.
+
+@AllArgsContructor - annotation is responsible for creating the constructor object for the domain class. part of lombok dependency.
+
+@SpringBootApplication - @configuration+@EnableAutoConfiguration+@ComponentScan
+@Configuration - used to indicate that the class contains the configuration method for the application context.
+@EnableAutoConfiguration - Automatically configuring the beans in the class path & automatically scans the dependencies what the 	  application needs.
+@Component - used to mark a class that as Spring bean that will be managed by the spring container.
+@ComponentScan - scan the components (@component and @service). anoonates the class and sub-packages.
+@RestController - Combination of @Controller+@Responsebody
+@RequestMapping - redirectng the specific requests to specific resources.
+@PathVariable - used to fetch the client side data into the specific resources.
+@GetMapping - will be accepting the GET requests only on the particular resource.
+@PostMapping - will be accepting the POST requests only on the particular resource.
+@RequestBody - used to accept the data from client to resource.
+@PutMapping - used to update the object
+@DeleteMapping - used to accept the data from client and delete the data.
+
+***************Caching*********************
+process of storing the frequent access data in memory for faster access to avoid latency and improve the query response time and reduce database load.
+LRU - Least freqnently used + LFU - Least frequenctly used + TTL - Time To Live
+Adding the dependency (redids/ehcahce)
+Setting up the value in application.properties.file (user, host, port, time-to-live, max_memory)
+In service layer -> @EnableCaching - @Cachable(Value="",key="") + @cacheEvitct(value="",key="")
+
+
+------------------------------REST API------------------------------
+Get - Used to fetch the data from the servers
+Post - used to save the data into the db/server.
+Put - used to update the existing records.
+Delete - used to delete the records
+
+----------------------------SPRING DATA JPA---------------------
+JPA - Java Persistence API------------------------------
+Hibernate - Implementing the JPA so its the best ORM - object relational mapping tool.
+
+@Repository - This annotation is responsible for mapping ORM with service layer.
+This layer will connect with database and get the expected responses.
+
+The DataSource object is responsible for having the configuration related to database.
+
+@NoArgsConstructor - This annotation can be used to create the default constrcutor within the domain class.
