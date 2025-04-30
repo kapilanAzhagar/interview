@@ -1,0 +1,12 @@
+SOLID -
+S-single responsiblity priciple - order should be just having order details
+    every single class should be responsible for single reason for changes/modification
+    Having just class Order with orderID, amount
+O - Open and Closed responsibility principle
+    Having the interface as payment then cc payment and paypal
+L - Liskow subsctitution principle
+    sub-class should be substituable for base class like abstract class shipping-express+standard
+I - Interface seggreeation
+    Notifier interface->email implementation+sms implementation
+D - Dependency Inversion Principle
+    composition - having payment, notifier, shipping then create the order
